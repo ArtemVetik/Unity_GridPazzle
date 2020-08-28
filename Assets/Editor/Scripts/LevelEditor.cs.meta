@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 59c0827b3d86ae54a8b3c0e151484675
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _itemToggle: {fileID: 11400000, guid: de9573163173964458b8ded6d4e4e615, type: 2}
+  - _filledToggle: {fileID: 11400000, guid: 8e2e18f4a948f5a4284b255e56ba1e04, type: 2}
+  - _playerToggle: {fileID: 11400000, guid: 0ad646d37226c9642bf0f3af73b302e8, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
