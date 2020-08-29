@@ -3,19 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-[CreateAssetMenu(fileName = "GridSettings", menuName = "Scriptable/GridSettings")]
-public class GridSettings : ScriptableObject
-{
-    [SerializeField] private Sprite _cellSprite, _itemSprite, _filledSprite, _playerSprite;
-    [SerializeField] private Paddings _paddings;
-
-    public Paddings Paddings => _paddings;
-    public Sprite CellSprite => _cellSprite;
-    public Sprite ItemSprite => _itemSprite;
-    public Sprite FilledSprite => _filledSprite;
-    public Sprite PlayerSprite => _playerSprite;
-}
-
 [Serializable]
 public class Paddings
 {

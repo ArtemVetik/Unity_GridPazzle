@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+public enum CellType
+{
+    Empty, Item, Filled, Player,
+}
+
 [Serializable]
 public class LevelData
 {
@@ -12,6 +17,7 @@ public class LevelData
     [SerializeField, HideInInspector] private CellData[] _grid;
 
     public Vector2Int Size => new Vector2Int(_width, _height);
+    public Vector2Int PlayerPosition { get; private set; }
     public CellData this[int y, int x]
     {
         get
@@ -20,8 +26,11 @@ public class LevelData
         }
         set
         {
-            if (value._type == CellType.Player)
-                RemoveAllPlayers();
+            if (value.Type == CellType.Player && this[PlayerPosition.y, PlayerPosition.x].Type == CellType.Player)
+            {
+                this[PlayerPosition.y, PlayerPosition.x] = new CellData(CellType.Empty);
+                PlayerPosition = new Vector2Int(x, y);
+            }
             _grid[y * _width + x] = value;
         }
     }
@@ -31,16 +40,6 @@ public class LevelData
         _width = width;
         _height = height;
         _grid = new CellData[_height * _width];
-    }
-
-    public Vector2Int GetPlayerPosition()
-    {
-        for (int y = 0; y < _height; y++)
-            for (int x = 0; x < _width; x++)
-                if (this[y, x]._type == CellType.Player)
-                    return new Vector2Int(x, y);
-
-        return Vector2Int.zero;
     }
 
     public void Resize(int newWidth, int newHeight)
@@ -53,38 +52,37 @@ public class LevelData
         Array.Resize(ref _grid, _width * _height);
     }
 
-    public void InitPositions(Vector2[,] positions)
+    public void InitPositions(int screenWidth, int screenHeight, Paddings paddings)
     {
-        if (positions.Length != _grid.Length)
-            throw new ArgumentException();
+        Vector2[,] positions = Size.GetGrid(screenWidth, screenHeight, paddings);
 
-        for (int y = 0; y < _height; y++)
-            for (int x = 0; x < _width; x++)
-                this[y, x] = new CellData(this[y, x]._type, positions[y, x]);
-    }
-
-    private void RemoveAllPlayers()
-    {
-        for (int index = 0; index < _width*_height; index++)
+        for (int y = 0; y < Size.y; y++)
         {
-            if (_grid[index]._type == CellType.Player)
-                _grid[index] = new CellData(CellType.Empty, _grid[index]._position);
+            for (int x = 0; x < Size.x; x++)
+            {
+                this[y, x] = new CellData(this[y, x].Type, positions[y, x]);
+            }
         }
     }
-}
 
-public enum CellType
-{
-    Empty, Item, Filled, Player,
+    public Vector2 GetWorldCenter()
+    {
+        float x = (this[0, 0].Position.x + this[0, _width - 1].Position.x) / 2;
+        float y = (this[0, 0].Position.y + this[_height - 1, 0].Position.y) / 2;
+        return Camera.main.ScreenToWorldPoint(new Vector2(x, y), Camera.MonoOrStereoscopicEye.Right);
+    }
 }
 
 [Serializable]
 public struct CellData
 {
-    [SerializeField, HideInInspector] public CellType _type;
-    [SerializeField, HideInInspector] public Vector2 _position;
+    [SerializeField, HideInInspector] private CellType _type;
+    [SerializeField, HideInInspector] private Vector2 _position;
 
-    public CellData(CellType type, Vector2 position = new Vector2())
+    public CellType Type => _type;
+    public Vector2 Position => _position;
+
+    public CellData(CellType type, Vector2 position = default)
     {
         _type = type;
         _position = position;

@@ -91,8 +91,8 @@ public class LevelEditor : Editor
             EditorGUILayout.BeginHorizontal();
             for (int x = 0; x < newWidth; x++)
             {
-                bool toggleValueBefore = data[y, x]._type != CellType.Empty;
-                bool toggleValueAfter = EditorGUILayout.Toggle(toggleValueBefore, SkinByType(data[y, x]._type).GetStyle("toggle"));
+                bool toggleValueBefore = data[y, x].Type != CellType.Empty;
+                bool toggleValueAfter = EditorGUILayout.Toggle(toggleValueBefore, SkinByType(data[y, x].Type).GetStyle("toggle"));
 
                 if (toggleValueBefore == false && toggleValueAfter == true)
                     data[y, x] = new CellData(_currentCellType);

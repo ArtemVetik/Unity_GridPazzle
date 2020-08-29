@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Checkpoint : MonoBehaviour
+public class Checkpoint : GridObject
 {
-    [SerializeField] private SpriteRenderer _sprite;
-
-    public SpriteRenderer Sprite => _sprite;
 
 }

@@ -5,8 +5,8 @@ using UnityEngine;
 public class GridGizmosViewer : MonoBehaviour
 {
     [SerializeField] private LevelDataBase _levels;
+    [SerializeField] private GameGrid _grid;
     [SerializeField] private int _currentLevel;
-    [SerializeField] private GridSettings _settings;
     [SerializeField] private Vector2Int _targetScreenSize;
     [SerializeField] private float _sphereRadius;
 
@@ -24,13 +24,13 @@ public class GridGizmosViewer : MonoBehaviour
         if (_levels.EmptyOrNull)
             return;
 
-        Vector2[,] grid = _levels[_currentLevel].Size.GetGrid(_targetScreenSize.x, _targetScreenSize.y, _settings.Paddings);
+        Vector2[,] grid = _levels[_currentLevel].Size.GetGrid(_targetScreenSize.x, _targetScreenSize.y, _grid.Paddings);
 
         for (int y = 0; y < _levels[_currentLevel].Size.y; y++)
         {
             for (int x = 0; x < _levels[_currentLevel].Size.x; x++)
             {
-                Gizmos.color = GetColorByCellType(_levels[_currentLevel][y, x]._type);
+                Gizmos.color = GetColorByCellType(_levels[_currentLevel][y, x].Type);
                 Gizmos.DrawSphere(Camera.main.ScreenToWorldPoint(grid[y, x]), _sphereRadius);
             }
         }
