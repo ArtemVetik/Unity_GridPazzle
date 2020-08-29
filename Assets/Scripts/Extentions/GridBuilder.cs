@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class GridBuilder
 {
-    public static Vector2[,] GetGrid(this Vector2Int size, float screenWidth, float screenHeight, Paddings paddings)
+    public static Vector2[,] CreateGridPositions(this Vector2Int size, float screenWidth, float screenHeight, Paddings paddings)
     {
         float realWidth = screenWidth * (1f - paddings.LeftPadding - paddings.RightPadding);
         float realHeight = screenHeight * (1f - paddings.TopPadding - paddings.DownPadding);
@@ -20,9 +20,31 @@ public static class GridBuilder
         float startX = screenWidth * paddings.LeftPadding + additionalXoffset / 2;
         float startY = screenHeight * paddings.DownPadding + additionalYoffset / 2;
 
+        Vector2 position;
         for (int y = 0; y < size.y; y++)
+        {
             for (int x = 0; x < size.x; x++)
-                grid[y, x] = new Vector2(startX + offset * x, startY + offset * y);
+            {
+                position = new Vector2(startX + offset * x, startY + offset * y);
+                grid[y, x] = Camera.main.ScreenToWorldPoint(position);
+            }
+        }
+
+        return grid;
+    }
+
+    public static CellData[,] CreateGrid(this LevelData levelData, float screenWidth, float screenHeight, Paddings paddings)
+    {
+        CellData[,] grid = new CellData[levelData.Size.y, levelData.Size.x];
+        Vector2[,] positions = levelData.Size.CreateGridPositions(screenWidth, screenHeight, paddings);
+
+        for (int y = 0; y < levelData.Size.y; y++)
+        {
+            for (int x = 0; x < levelData.Size.x; x++)
+            {
+                grid[y, x] = new CellData(levelData[y,x], positions[y,x]);
+            }
+        }
 
         return grid;
     }

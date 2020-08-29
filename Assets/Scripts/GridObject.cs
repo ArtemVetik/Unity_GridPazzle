@@ -6,7 +6,7 @@ using UnityEngine;
 public class GridObject : MonoBehaviour
 {
     private SpriteRenderer _spriteRenderer;
-    private GameGrid _grid;
+    protected GameGrid _grid;
 
     private void Awake()
     {

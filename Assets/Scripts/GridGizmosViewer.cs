@@ -24,14 +24,14 @@ public class GridGizmosViewer : MonoBehaviour
         if (_levels.EmptyOrNull)
             return;
 
-        Vector2[,] grid = _levels[_currentLevel].Size.GetGrid(_targetScreenSize.x, _targetScreenSize.y, _grid.Paddings);
+        Vector2[,] grid = _levels[_currentLevel].Size.CreateGridPositions(_targetScreenSize.x, _targetScreenSize.y, _grid.Paddings);
 
         for (int y = 0; y < _levels[_currentLevel].Size.y; y++)
         {
             for (int x = 0; x < _levels[_currentLevel].Size.x; x++)
             {
-                Gizmos.color = GetColorByCellType(_levels[_currentLevel][y, x].Type);
-                Gizmos.DrawSphere(Camera.main.ScreenToWorldPoint(grid[y, x]), _sphereRadius);
+                Gizmos.color = GetColorByCellType(_levels[_currentLevel][y, x]);
+                Gizmos.DrawSphere(grid[y, x], _sphereRadius);
             }
         }
     }

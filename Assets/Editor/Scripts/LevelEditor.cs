@@ -5,8 +5,6 @@ using UnityEditor;
 using System;
 using System.Reflection;
 
-[InitializeOnLoad]
-[CanEditMultipleObjects]
 [CustomEditor(typeof(LevelDataBase))]
 public class LevelEditor : Editor
 {
@@ -74,7 +72,7 @@ public class LevelEditor : Editor
         EditorGUILayout.LabelField("Player", style);
         style.normal.textColor = _filledToggle.GetStyle("toggle").normal.textColor;
         EditorGUILayout.LabelField("Filled", style);
-
+        
         FieldInfo dataWidth = data.GetType().GetField("_width", BindingFlags.NonPublic | BindingFlags.Instance);
         FieldInfo dataHeight = data.GetType().GetField("_height", BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -86,18 +84,21 @@ public class LevelEditor : Editor
 
         data.Resize(newWidth, newHeight);
 
+        FieldInfo arrayData = data.GetType().GetField("_grid", BindingFlags.NonPublic | BindingFlags.Instance);
+        CellType[] a = (CellType[])arrayData.GetValue(data);
+
         for (int y = 0; y < newHeight; y++)
         {
             EditorGUILayout.BeginHorizontal();
             for (int x = 0; x < newWidth; x++)
             {
-                bool toggleValueBefore = data[y, x].Type != CellType.Empty;
-                bool toggleValueAfter = EditorGUILayout.Toggle(toggleValueBefore, SkinByType(data[y, x].Type).GetStyle("toggle"));
+                bool toggleValueBefore = data[y, x] != CellType.Empty;
+                bool toggleValueAfter = EditorGUILayout.Toggle(toggleValueBefore, SkinByType(data[y, x]).GetStyle("toggle"));
 
                 if (toggleValueBefore == false && toggleValueAfter == true)
-                    data[y, x] = new CellData(_currentCellType);
+                    a[y * data.Size.x + x] = _currentCellType;
                 if (toggleValueAfter == false)
-                    data[y, x] = new CellData(CellType.Empty);
+                    a[y * data.Size.x + x] = CellType.Empty;
             }
             EditorGUILayout.EndHorizontal();
         }
