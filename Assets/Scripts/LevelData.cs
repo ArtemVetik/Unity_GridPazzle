@@ -17,7 +17,6 @@ public class LevelData
     [SerializeField, HideInInspector] private CellType[] _grid;
 
     public Vector2Int Size => new Vector2Int(_width, _height);
-    public Vector2Int PlayerPosition { get; private set; }
     public CellType this[Vector2Int position] => this[position.y, position.x]; 
     public CellType this[int y, int x] => _grid[y * _width + x];
 
@@ -36,5 +35,19 @@ public class LevelData
         _width = newWidth;
         _height = newHeight;
         Array.Resize(ref _grid, _width * _height); // TODO: custom resize method
+    }
+
+    public Vector2Int GetPlayerPosition()
+    {
+        for (int y = 0; y < _height; y++)
+        {
+            for (int x = 0; x < _width; x++)
+            {
+                if (this[y, x] == CellType.Player)
+                    return new Vector2Int(x, y);
+            }
+        }
+
+        return Vector2Int.zero;
     }
 }

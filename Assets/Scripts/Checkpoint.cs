@@ -7,14 +7,15 @@ public class Checkpoint : GridObject
 {
     private CircleCollider2D _collider;
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         _collider = GetComponent<CircleCollider2D>();
     }
 
     private void Start()
     {
-        _collider.radius = transform.localScale.x;
+        _collider.radius = 0.25f;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

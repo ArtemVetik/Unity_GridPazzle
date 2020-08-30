@@ -317,8 +317,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gridSprite: {fileID: 730460187}
   _paddings:
-    _leftPadding: 0.05
-    _rightPadding: 0.05
+    _leftPadding: 0.2
+    _rightPadding: 0.2
     _topPadding: 0
     _downPadding: 0
 --- !u!4 &1787777718

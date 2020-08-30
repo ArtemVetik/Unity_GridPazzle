@@ -22,7 +22,7 @@ public class GameGrid : MonoBehaviour
         _grid = level.CreateGrid(Screen.width, Screen.height, _paddings);
 
         Size = level.Size;
-        PlayerPosition = level.PlayerPosition;
+        PlayerPosition = level.GetPlayerPosition();
         WorldCellSize = Vector2.Distance(_grid[0, 0].Position, _grid[0, 1].Position);
 
         _gridSprite.ConfigureSprite(_gridSprite.sprite, Vector2.one * WorldCellSize, GetWorldCenter(), Size);

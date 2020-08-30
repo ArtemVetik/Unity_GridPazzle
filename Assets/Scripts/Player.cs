@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Player : GridObject
 {
-    Vector2 _targetPosition;
+    [SerializeField] private float _speed;
+
+    private Vector2 _targetPosition;
 
     public bool CanMove => (Vector2)(transform.position) == _targetPosition;
 
@@ -13,7 +15,7 @@ public class Player : GridObject
         Move();
 
         _targetPosition = _grid[_grid.PlayerPosition].Position;
-        transform.position = Vector2.MoveTowards(transform.position, _targetPosition, 5f * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, _targetPosition, _speed * Time.deltaTime);
     }
 
     private void Move()
