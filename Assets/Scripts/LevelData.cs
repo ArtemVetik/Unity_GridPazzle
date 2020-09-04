@@ -17,7 +17,7 @@ public class LevelData
     [SerializeField, HideInInspector] private CellType[] _grid;
 
     public Vector2Int Size => new Vector2Int(_width, _height);
-    public CellType this[Vector2Int position] => this[position.y, position.x]; 
+    public CellType this[Vector2Int position] => this[position.y, position.x];
     public CellType this[int y, int x] => _grid[y * _width + x];
 
     public LevelData(int width = 0, int height = 0)
@@ -49,5 +49,17 @@ public class LevelData
         }
 
         return Vector2Int.zero;
+    }
+
+    public int GetItemCount()
+    {
+        int count = 0;
+        foreach (CellType type in _grid)
+        {
+            if (type == CellType.Item)
+                count++;
+        }
+
+        return count;
     }
 }

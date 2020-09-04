@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class Player : GridObject
+public class Player : MonoBehaviour
 {
     [SerializeField] private float _speed;
 
@@ -10,12 +11,24 @@ public class Player : GridObject
 
     public bool CanMove => (Vector2)(transform.position) == _targetPosition;
 
+    public UnityAction<Vector2Int> Moved; 
+    public UnityAction CollectedCheckpoint;
+
+    private void Start()
+    {
+        _targetPosition = transform.position;
+    }
+
     private void Update()
     {
         Move();
 
-        _targetPosition = _grid[_grid.PlayerPosition].Position;
         transform.position = Vector2.MoveTowards(transform.position, _targetPosition, _speed * Time.deltaTime);
+    }
+
+    public void SetTargetPosition(Vector3 position)
+    {
+        _targetPosition = position;
     }
 
     private void Move()
@@ -24,12 +37,21 @@ public class Player : GridObject
             return;
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
-            _grid.Move(Vector2Int.left);
+            Moved?.Invoke(Vector2Int.left);
         if (Input.GetKeyDown(KeyCode.RightArrow))
-            _grid.Move(Vector2Int.right);
+            Moved?.Invoke(Vector2Int.right);
         if (Input.GetKeyDown(KeyCode.UpArrow))
-            _grid.Move(Vector2Int.up);
+            Moved?.Invoke(Vector2Int.up);
         if (Input.GetKeyDown(KeyCode.DownArrow))
-            _grid.Move(Vector2Int.down);
+            Moved?.Invoke(Vector2Int.down);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent(out Checkpoint checkpoint))
+        {
+            checkpoint.Die();
+            CollectedCheckpoint?.Invoke();
+        }
     }
 }
